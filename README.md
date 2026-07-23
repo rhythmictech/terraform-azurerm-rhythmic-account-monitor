@@ -68,7 +68,7 @@ See [`examples/basic`](examples/basic) for a runnable configuration.
 ## Design notes
 
 - **One rule per operation.** Azure activity-log alert criteria are singular:
-  a rule filters on a single `operation_name`. The catalog is therefore modelled
+  a rule filters on a single `operation_name`. The catalog is therefore modeled
   as one operation per map entry. Override the whole `activity_log_detections`
   map to replace the curated set, or add entries for subscription-specific
   operations. A `null` `operation_name` produces a category-wide rule (used for

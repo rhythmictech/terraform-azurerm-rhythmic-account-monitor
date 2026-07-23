@@ -21,7 +21,7 @@ data "azurerm_subscription" "current" {}
 
 # A. Control-plane detections. One activity-log alert rule per catalog entry,
 # each firing into the shared Action Group. Azure activity-log criteria are
-# singular (one operation_name per rule), which is why the catalog is modelled
+# singular (one operation_name per rule), which is why the catalog is modeled
 # as one operation per map entry.
 resource "azurerm_monitor_activity_log_alert" "detections" {
   for_each = var.activity_log_detections
