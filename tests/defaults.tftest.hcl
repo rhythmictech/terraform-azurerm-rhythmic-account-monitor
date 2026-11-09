@@ -13,10 +13,23 @@ run "defaults" {
     resource_group_name = "rhythmic-monitoring"
   }
 
-  # The curated catalog ships exactly eight control-plane detections.
+  # The curated catalog ships exactly nine control-plane detections.
   assert {
-    condition     = length(azurerm_monitor_activity_log_alert.detections) == 8
-    error_message = "the default detection catalog should render exactly 8 activity-log alert rules"
+    condition     = length(azurerm_monitor_activity_log_alert.detections) == 9
+    error_message = "the default detection catalog should render exactly 9 activity-log alert rules"
+  }
+
+  # Stopping backup protection is a write on the protected item, not a failed
+  # job, so the catalog watches that operation with no level filter: the
+  # events are Informational.
+  assert {
+    condition     = azurerm_monitor_activity_log_alert.detections["backup-protection-changed"].criteria[0].operation_name == "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write"
+    error_message = "backup-protection-changed should target the protectedItems/write operation"
+  }
+
+  assert {
+    condition     = azurerm_monitor_activity_log_alert.detections["backup-protection-changed"].criteria[0].level == null
+    error_message = "backup-protection-changed must not filter on level; protection changes log as Informational"
   }
 
   # Every detection fires into the shared Action Group.

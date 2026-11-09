@@ -59,6 +59,11 @@ variable "activity_log_detections" {
       operation_name = "Microsoft.RecoveryServices/vaults/backupPolicies/write"
       description    = "A Recovery Services backup policy was created or modified."
     }
+    backup-protection-changed = {
+      category       = "Administrative"
+      operation_name = "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write"
+      description    = "Backup protection of an item was configured, stopped or resumed. A stopped item never fails a job, so this is the only signal that backups were switched off."
+    }
     policy-noncompliance = {
       category       = "Policy"
       operation_name = null
