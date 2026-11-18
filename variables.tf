@@ -44,6 +44,11 @@ variable "activity_log_detections" {
       operation_name = "Microsoft.Authorization/policyAssignments/delete"
       description    = "A policy assignment was deleted."
     }
+    resource-lock-deleted = {
+      category       = "Administrative"
+      operation_name = "Microsoft.Authorization/locks/delete"
+      description    = "A management lock was deleted. Locks are usually applied out of band so that no code change can remove one, which makes their removal worth an event."
+    }
     defender-plan-changed = {
       category       = "Administrative"
       operation_name = "Microsoft.Security/pricings/write"
