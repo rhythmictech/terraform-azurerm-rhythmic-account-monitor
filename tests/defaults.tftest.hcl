@@ -13,10 +13,22 @@ run "defaults" {
     resource_group_name = "rhythmic-monitoring"
   }
 
-  # The curated catalog ships exactly nine control-plane detections.
+  # The curated catalog ships exactly ten control-plane detections.
   assert {
-    condition     = length(azurerm_monitor_activity_log_alert.detections) == 9
-    error_message = "the default detection catalog should render exactly 9 activity-log alert rules"
+    condition     = length(azurerm_monitor_activity_log_alert.detections) == 10
+    error_message = "the default detection catalog should render exactly 10 activity-log alert rules"
+  }
+
+  # Resource locks are typically applied out of band so that no code change can
+  # remove one; deleting a lock is therefore always worth an event.
+  assert {
+    condition     = azurerm_monitor_activity_log_alert.detections["resource-lock-deleted"].criteria[0].operation_name == "Microsoft.Authorization/locks/delete"
+    error_message = "resource-lock-deleted should target the locks/delete operation"
+  }
+
+  assert {
+    condition     = azurerm_monitor_activity_log_alert.detections["resource-lock-deleted"].criteria[0].level == null
+    error_message = "resource-lock-deleted must not filter on level; lock deletions log as Informational"
   }
 
   # Stopping backup protection is a write on the protected item, not a failed
